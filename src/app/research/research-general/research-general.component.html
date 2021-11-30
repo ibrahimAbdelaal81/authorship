@@ -1,0 +1,89 @@
+<ng-container *ngIf="loading; else notLoading">
+  <div class="spinner-grow text-primary mr-50 centerLoading">
+    <span class="sr-only">Loading...</span>
+  </div>
+</ng-container>
+<ng-template #notLoading>
+  <div class="card card-developer-meetup">
+    <div class="bg-light-primary rounded-top text-center">
+      <img
+        src="{{
+          data.image ? data.image : 'assets/images/illustration/email.svg'
+        }}"
+        alt="Meeting Pic"
+        height="170"
+      />
+    </div>
+    <div class="card-body">
+      <div class="meetup-header d-flex align-items-center">
+        <div class="meetup-day">
+          <h3 class="mb-0">
+            {{ data.created_at | date }}
+          </h3>
+        </div>
+        <div class="my-auto">
+          <h4 class="card-title mb-25">
+            {{ data.name }}
+          </h4>
+          <p class="card-text mb-0">{{ data.status }}</p>
+        </div>
+      </div>
+      <div class="media">
+        <div class="media-body">
+          <h6 class="mb-0">
+            {{ data.abstract ? data.abstract : "No Abstract Found" }}
+          </h6>
+        </div>
+        <div
+          class="FloatRight"
+          *ngIf="userRole != 'Admin' && !participated && data?.status === 'NEW'"
+        >
+          <button
+            [disabled]="loading"
+            tabindex="5"
+            rippleEffect
+            (click)="participateInResearch()"
+            class="btn btn-primary mr-1 waves-effect waves-float waves-light"
+          >
+            <span
+              *ngIf="loading"
+              class="spinner-border spinner-border-sm mr-1"
+            ></span>
+            Participate
+          </button>
+        </div>
+      </div>
+
+      <div class="avatar-group">
+        <ng-container
+          *ngIf="
+            data.investigators && data.investigators.length > 0;
+            else elseTemplate
+          "
+        >
+          <app-investigator-thumbnail *ngFor="let invest of data.investigators" [data]="invest">
+          </app-investigator-thumbnail>
+        </ng-container>
+        <ng-template #elseTemplate> No Investigators Found </ng-template>
+        <br />
+      </div>
+      <div
+        *ngIf="participated && userRole !== 'Admin'"
+        style="text-align: center; font-size: 25px"
+      >
+        <div *ngIf="investigator?.status === 'Declined'">
+          You have been declined from this research
+        </div>
+        <div *ngIf="investigator?.status === 'Pending'">
+          Your request is still pending
+        </div>
+      </div>
+    </div>
+    <!-- app-toast-container component -->
+  </div>
+</ng-template>
+<app-toast-container
+  [ngStyle]="toastStyle"
+  aria-live="polite"
+  aria-atomic="true"
+></app-toast-container>

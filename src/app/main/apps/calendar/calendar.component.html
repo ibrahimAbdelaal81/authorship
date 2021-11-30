@@ -1,0 +1,54 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <div class="app-calendar overflow-hidden border">
+      <div class="row no-gutters">
+        <!-- calendar main sidebar -->
+        <!-- <core-sidebar
+          class="col app-calendar-sidebar flex-grow-0 overflow-hidden d-flex flex-column"
+          name="calendar-main-sidebar"
+          overlayClass="body-content-overlay"
+          collapsibleSidebar="bs-gt-lg"
+        >
+          <app-calendar-main-sidebar></app-calendar-main-sidebar>
+        </core-sidebar> -->
+        <!--/ calendar main sidebar -->
+
+        <!-- calendar -->
+        <ngb-alert [type]="'danger'" [dismissible]="false" *ngIf="error">
+          <div class="alert-body">
+            <p>{{ error }}</p>
+          </div>
+        </ngb-alert>
+        <ng-container *ngIf="loading; else notLoading">
+          <div
+            class="spinner-grow text-primary mr-50 center"
+            style="width: 8rem; height: 8rem"
+          >
+            <span class="sr-only">Loading...</span>
+          </div>
+        </ng-container>
+        <ng-template #notLoading>
+          <div class="col position-relative">
+            <div class="card shadow-none border-0 mb-0 rounded-0">
+              <div class="card-body pb-0">
+                <full-calendar [options]="calendarOptions"></full-calendar>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <!-- calendar -->
+      </div>
+    </div>
+
+    <!-- calendar event sidebar -->
+    <core-sidebar
+      class="modal modal-slide-in fade event-sidebar"
+      name="calendar-event-sidebar"
+      overlayClass="modal-backdrop"
+      hideOnEsc="true"
+    >
+      <app-calendar-event-sidebar></app-calendar-event-sidebar>
+    </core-sidebar>
+    <!--/ calendar event sidebar -->
+  </div>
+</div>

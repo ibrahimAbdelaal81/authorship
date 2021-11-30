@@ -1,0 +1,9 @@
+@import "@core/scss/core.scss";
+@import "./assets/scss/styles";
+.centerLoading {
+  width: 8rem;
+  height: 8rem;
+  position: fixed;
+  left: 50%;
+  top: 40%;
+}

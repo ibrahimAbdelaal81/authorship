@@ -1,0 +1,231 @@
+<ng-container *ngIf="loading; else notLoading">
+  <div class="spinner-grow text-primary mr-50 centerLoading">
+    <span class="sr-only">Loading...</span>
+  </div>
+</ng-container>
+<ng-template #notLoading>
+  <div class="card">
+    <div class="row" id="table-striped">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Investigators</h4>
+          </div>
+          <ngx-datatable
+            class="bootstrap core-bootstrap"
+            [headerHeight]="40"
+            [rowHeight]="58"
+            [limit]="10"
+            [columnMode]="ColumnMode.force"
+            [footerHeight]="50"
+            [rows]="allInvestigators"
+            [scrollbarH]="true"
+          >
+            <ngx-datatable-column name="User" prop="firstName">
+              <ng-template
+                let-row="row"
+                let-name="value"
+                ngx-datatable-cell-template
+              >
+                {{ row.firstName + " " + row.lastName }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Status" prop="researches.status">
+              <ng-template
+                ngx-datatable-cell-template
+                let-rowIndex="rowIndex"
+                let-row="row"
+                let-value="value"
+              >
+                <div title="Double click to edit">
+                  <div
+                    class="badge badge-pill"
+                    [ngClass]="{
+                      'badge-light-success': value == 'Approved',
+                      'badge-light-danger': value == 'Declined',
+                      'badge-light-warning': value == 'Pending'
+                    }"
+                  >
+                    {{ value }}
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column
+              name="Can Show Result"
+              prop="researches.canShowResult"
+            >
+              <ng-template
+                ngx-datatable-cell-template
+                let-rowIndex="rowIndex"
+                let-row="row"
+                let-value="value"
+              >
+                <div title="Double click to edit">
+                  <div
+                    class="badge badge-pill"
+                    [ngClass]="{
+                      'badge-light-success': value == 'Approved',
+                      'badge-light-danger': value == 'Declined',
+                      'badge-light-warning': value == 'Pending'
+                    }"
+                  >
+                    {{ value }}
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Actions" [sortable]="false">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                <div ngbDropdown container="body">
+                  <button
+                    ngbDropdownToggle
+                    type="button"
+                    class="btn icon-btn btn-sm hide-arrow"
+                    rippleEffect
+                  >
+                    <span
+                      [data-feather]="'more-vertical'"
+                      [class]="'cursor-pointer'"
+                    ></span>
+                  </button>
+                  <div ngbDropdownMenu>
+                    <a
+                      ngbDropdownItem
+                      href="javascript:void(0);"
+                      (click)="modalOpenForm(modalForm, row)"
+                      ><i data-feather="edit-2" class="mr-50"></i
+                      ><span>Edit</span></a
+                    >
+                    <a
+                      ngbDropdownItem
+                      *ngIf="
+                        (row.researches.parameters.status ===
+                          'Pending Validation' ||
+                          row.researches.parameters.status === 'Validate') &&
+                        (userRole === 'Admin' || investigatorRole === 'Admin')
+                      "
+                      href="javascript:void(0);"
+                      (click)="updateParameters(modalLG, row)"
+                      ><i data-feather="sliders" class="mr-50"></i
+                      ><span>Parameters</span></a
+                    >
+                    <a
+                      ngbDropdownItem
+                      *ngIf="
+                        (userRole === 'Admin' ||
+                          investigatorRole === 'Admin') &&
+                        row?.researches?.status != 'Approved'
+                      "
+                      href="javascript:void(0);"
+                      (click)="delete(row)"
+                      ><i data-feather="delete" class="mr-50"></i
+                      ><span>Delete</span></a
+                    >
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- Modal -->
+<ng-template #modalForm let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel1">Research Investigator</h4>
+    <button
+      type="button"
+      class="close"
+      (click)="modal.dismiss('Cross click')"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <form>
+      <div class="form-group">
+        <label for="selectStatus">Status</label>
+        <select
+          class="custom-select"
+          id="selectStatus"
+          [(ngModel)]="selectStatus"
+          name="selectStatus"
+        >
+          <option value="">Open this menu</option>
+          <option *ngFor="let item of selectOptions">{{ item }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="selectCanShowResult">Can Show Result</label>
+        <select
+          class="custom-select"
+          id="selectCanShowResult"
+          [(ngModel)]="selectCanShowResult"
+          name="selectCanShowResult"
+        >
+          <option value="">Open this menu</option>
+          <option *ngFor="let item of selectOptions">{{ item }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="selectedRole">Role</label>
+        <select
+          class="custom-select"
+          id="selectedRole"
+          [(ngModel)]="selectedRole"
+          name="selectedRole"
+        >
+          <option *ngFor="let item of rolesOptions" value="{{ item.value }}">
+            {{ item.label }}
+          </option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="edit()" rippleEffect>
+      Edit
+    </button>
+  </div>
+</ng-template>
+<!-- / Modal -->
+<!-- Modal -->
+<ng-template #modalLG let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="myModalLabel160">
+      {{ selectedElement.investigator.firstName }}
+      {{ selectedElement.investigator.lastName }}
+    </h2>
+    <button
+      type="button"
+      class="close"
+      (click)="modal.dismiss('Cross click')"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <app-investigator-parameters
+      [data]="selectedElement"
+    ></app-investigator-parameters>
+    <button
+      type="button"
+      class="btn btn-secondary modalLGFooter"
+      (click)="modal.close('Accept click')"
+      rippleEffect
+    >
+      Exit
+    </button>
+  </div>
+</ng-template>
+<!-- / Modal -->
+<app-toast-container
+  [ngStyle]="toastStyle"
+  aria-live="polite"
+  aria-atomic="true"
+></app-toast-container>

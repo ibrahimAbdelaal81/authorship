@@ -1,0 +1,390 @@
+<ng-container *ngIf="loading; else notLoading">
+  <div class="spinner-grow text-primary centerLoading">
+    <span class="sr-only">Loading...</span>
+  </div>
+</ng-container>
+<ng-template #notLoading>
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card profile-header mb-2">
+            <div class="position-relative">
+              <!-- profile picture -->
+              <div class="profile-img-container d-flex align-items-center">
+                <div class="profile-img">
+                  <img
+                    [src]="
+                      user?.image
+                        ? user.image
+                        : 'assets/images/avatars/user_image.jpg'
+                    "
+                    width="200px"
+                    height="200px"
+                    class="rounded img-fluid"
+                    alt="Card image"
+                  />
+                </div>
+                <!-- profile title -->
+                <div class="profile-title ml-3">
+                  <h2>
+                    {{
+                      user?.firstName +
+                        " " +
+                        user?.lastName +
+                        "(" +
+                        user?.roles[0] +
+                        ")"
+                    }}
+                    <a (click)="modalOpenPrimary(modalPrimary)">
+                      <i
+                        data-feather="edit"
+                        class="font-medium-4 text-primary toggle-icon"
+                      ></i>
+                    </a>
+                  </h2>
+                  <p>{{ user?.email }}</p>
+                  <p>{{ user?.mobile }}</p>
+                  <p>
+                    <span
+                      class="badge badge-pill"
+                      [ngClass]="{
+                        'badge-light-success': user?.appStatus == 'Approved',
+                        'badge-light-danger': user?.appStatus == 'Declined',
+                        'badge-light-warning': user?.appStatus == 'Pending'
+                      }"
+                    >
+                      {{ user?.appStatus }}
+                    </span>
+                  </p>
+                  <!-- Button trigger modal -->
+                </div>
+                <div class="modal-primary d-inline-block">
+                  <!-- Modal -->
+                  <ng-template #modalPrimary let-modal>
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="myModalLabel160">
+                        {{ user?.firstName + " " + user?.lastName }}
+                      </h5>
+                      <button
+                        type="button"
+                        class="close"
+                        (click)="modal.dismiss('Cross click')"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body" tabindex="0" ngbAutofocus>
+                      <form
+                        class="auth-register-form mt-2"
+                        [formGroup]="editUserForm"
+                        (ngSubmit)="onSubmit()"
+                      >
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="form-group">
+                              <label for="basicInputFile">Image</label>
+                              <div class="custom-file">
+                                <input
+                                  type="file"
+                                  class="custom-file-input"
+                                  id="customFile"
+                                  (change)="onChooseImage($event)"
+                                />
+                                <label
+                                  class="custom-file-label"
+                                  for="customFile"
+                                  >Choose file</label
+                                >
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-12" *ngIf="imagePreview">
+                            <div class="img-wrap">
+                              <img
+                                style="margin-top: 20px"
+                                [src]="imagePreview"
+                                width="100"
+                                height="100"
+                              />
+                              <br /><br />
+                            </div>
+                          </div>
+                          <div class="col-md-6 col-12">
+                            <div class="form-group">
+                              <label for="register-firstName" class="form-label"
+                                >FirstName</label
+                              >
+                              <input
+                                type="text"
+                                formControlName="firstName"
+                                class="form-control"
+                                placeholder="john"
+                                aria-describedby="register-firstName"
+                                tabindex="1"
+                                autofocus
+                                [ngClass]="{
+                                  'is-invalid': submitted && f.firstName.errors
+                                }"
+                              />
+                              <div
+                                *ngIf="submitted && f.firstName.errors"
+                                class="invalid-feedback"
+                              >
+                                <div *ngIf="f.firstName.errors.required">
+                                  FirstName is required
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6 col-12">
+                            <div class="form-group">
+                              <label for="register-lastName" class="form-label"
+                                >LastName</label
+                              >
+                              <input
+                                type="text"
+                                formControlName="lastName"
+                                class="form-control"
+                                placeholder="doe"
+                                aria-describedby="register-lastName"
+                                tabindex="1"
+                                autofocus
+                                [ngClass]="{
+                                  'is-invalid': submitted && f.lastName.errors
+                                }"
+                              />
+                              <div
+                                *ngIf="submitted && f.lastName.errors"
+                                class="invalid-feedback"
+                              >
+                                <div *ngIf="f.lastName.errors.required">
+                                  LastName is required
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <div class="form-group">
+                              <label for="register-email" class="form-label"
+                                >Email</label
+                              >
+                              <input
+                                type="text"
+                                formControlName="email"
+                                class="form-control"
+                                placeholder="john@example.com"
+                                aria-describedby="register-email"
+                                tabindex="2"
+                                [ngClass]="{
+                                  'is-invalid': submitted && f.email.errors
+                                }"
+                              />
+                              <div
+                                *ngIf="submitted && f.email.errors"
+                                class="invalid-feedback"
+                              >
+                                <div *ngIf="f.email.errors.required">
+                                  Email is required
+                                </div>
+                                <div *ngIf="f.email.errors.email">
+                                  Email must be a valid email address
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6 col-12">
+                            <div class="form-group">
+                              <label for="register-mobile" class="form-label"
+                                >Mobile</label
+                              >
+                              <input
+                                type="text"
+                                formControlName="mobile"
+                                class="form-control"
+                                placeholder="056897447"
+                                aria-describedby="register-mobile"
+                                tabindex="1"
+                                autofocus
+                                [ngClass]="{
+                                  'is-invalid': submitted && f.mobile.errors
+                                }"
+                              />
+                              <div
+                                *ngIf="submitted && f.mobile.errors"
+                                class="invalid-feedback"
+                              >
+                                <div *ngIf="f.mobile.errors.required">
+                                  Mobile is required
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6 col-12">
+                            <div class="form-group">
+                              <label for="register-title" class="form-label"
+                                >Title</label
+                              >
+                              <input
+                                type="text"
+                                formControlName="title"
+                                class="form-control"
+                                placeholder="Prof"
+                                aria-describedby="register-title"
+                                tabindex="1"
+                                autofocus
+                                [ngClass]="{
+                                  'is-invalid': submitted && f.title.errors
+                                }"
+                              />
+                              <div
+                                *ngIf="submitted && f.title.errors"
+                                class="invalid-feedback"
+                              >
+                                <div *ngIf="f.title.errors.required">
+                                  Title is required
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          [disabled]="loading"
+                          class="btn btn-primary btn-block"
+                          tabindex="5"
+                          rippleEffect
+                        >
+                          <span
+                            *ngIf="loading"
+                            class="spinner-border spinner-border-sm mr-1"
+                          ></span>
+                          Edit
+                        </button>
+                      </form>
+                    </div>
+                  </ng-template>
+                  <!-- / Modal -->
+                </div>
+              </div>
+            </div>
+
+            <!-- tabs pill -->
+            <div class="profile-header-nav">
+              <!-- navbar -->
+              <nav
+                class="
+                  navbar navbar-expand-md navbar-light
+                  justify-content-end justify-content-md-between
+                  w-100
+                "
+              ></nav>
+              <!--/ navbar -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <ngx-datatable
+        [headerHeight]="40"
+        [rowHeight]="58"
+        [limit]="10"
+        class="bootstrap core-bootstrap"
+        [columnMode]="ColumnMode.force"
+        [footerHeight]="50"
+        [rows]="user?.researches"
+        [scrollbarH]="true"
+      >
+        <ngx-datatable-column name="Name" prop="id.name">
+          <ng-template
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+            let-value="value"
+            let-row="row"
+          >
+            <div title="Double click to edit">
+              <div class="d-flex align-items-center">
+                <div class="cell-line-height">
+                  <p class="font-medium-1 line-height-1 mb-0">{{ value }}</p>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Role" prop="roles">
+          <ng-template let-roles="value" ngx-datatable-cell-template>
+            <div>
+              <i class="feather font-medium-3"></i>
+              {{ roles }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Updated At" prop="updated_at">
+          <ng-template let-updated_at="value" ngx-datatable-cell-template>
+            <div>
+              <i class="feather font-medium-3"></i>
+              {{ updated_at | date: "short" }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Status" prop="status">
+          <ng-template
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+            let-row="row"
+            let-value="value"
+          >
+            <div title="Double click to edit">
+              <div
+                class="badge badge-pill"
+                [ngClass]="{
+                  'badge-light-success': value == 'Approved',
+                  'badge-light-danger': value == 'Declined',
+                  'badge-light-warning': value == 'Pending'
+                }"
+              >
+                {{ value }}
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Actions" [sortable]="false">
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <div ngbDropdown container="body">
+              <button
+                ngbDropdownToggle
+                type="button"
+                class="btn icon-btn btn-sm hide-arrow"
+                rippleEffect
+              >
+                <span
+                  [data-feather]="'more-vertical'"
+                  [class]="'cursor-pointer'"
+                ></span>
+              </button>
+              <div ngbDropdownMenu>
+                <a
+                  ngbDropdownItem
+                  href="javascript:void(0);"
+                  (click)="showResearchDetails(row)"
+                  ><i data-feather="eye" class="mr-50"></i
+                  ><span>Details</span></a
+                >
+                <a
+                  ngbDropdownItem
+                  *ngIf="
+                    (userRole === 'Admin' || selfProfile) &&
+                    row.status != 'Approved'
+                  "
+                  href="javascript:void(0);"
+                  (click)="deleteResearch(row)"
+                  ><i data-feather="delete" class="mr-50"></i
+                  ><span>Delete</span></a
+                >
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </div>
+</ng-template>

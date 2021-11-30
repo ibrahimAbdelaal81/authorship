@@ -1,0 +1,13 @@
+<div
+    placement="bottom"
+    container="body"
+    ngbTooltip="{{investigator ? investigator.name : 'Loading ...'}}"
+    class="avatar pull-up"
+    >
+    <img
+        src="{{investigator && investigator.thumbnail ? investigator.thumbnail : 'assets/images/portrait/small/default.jpg'}}"
+        alt="Avatar"
+        width="33"
+        height="33"
+    />
+</div>

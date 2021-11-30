@@ -1,0 +1,692 @@
+<ng-container *ngIf="error; else elseTemplate">
+  <ngb-alert [type]="'danger'" [dismissible]="false">
+    <div class="alert-body">
+      <p>{{ error }}</p>
+    </div>
+  </ngb-alert>
+</ng-container>
+<ng-template #elseTemplate>
+  <ng-container *ngIf="loading; else notLoading">
+    <div class="spinner-grow text-primary mr-50 centerLoading">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </ng-container>
+  <ng-template #notLoading>
+    <div>
+      <div class="row">
+        <div class="row m-1">
+          <h1>Parameters</h1>
+        </div>
+        <div class="badgeStyle">
+          <span class="badge badge-primary" style="font-size: 18px">{{
+            investigator.researches.parameters.status
+          }}</span>
+        </div>
+      </div>
+      <div>
+        <div class="row">
+          <div class="col-sm-6 col-12">
+            <div
+              class="card"
+              [ngClass]="{
+                'border-danger':
+                  !investigator.researches['parameters']['studyDesign'],
+                'border-success':
+                  investigator.researches['parameters']['studyDesign']
+              }"
+            >
+              <div class="card-body height">
+                <h5 class="titlePadding card-title mt-1">Study Design</h5>
+                <p class="card-text textPadding">
+                  Formulation of trials and experiments, as well as
+                  observational studies in research.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="
+                      investigator.researches['parameters']['studyDesign']
+                    "
+                    (click)="check('studyDesign')"
+                  />
+                  <span class="slider round">
+                    <label
+                      *ngIf="
+                        investigator.researches['parameters']['studyDesign']
+                      "
+                    ></label>
+                    <label
+                      *ngIf="
+                        !investigator.researches['parameters']['studyDesign']
+                      "
+                    ></label>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div
+              class="card"
+              [ngClass]="{
+                'border-danger':
+                  !investigator.researches['parameters']['monitoring'],
+                'border-success':
+                  investigator.researches['parameters']['monitoring']
+              }"
+            >
+              <div class="card-body height">
+                <h5 class="titlePadding card-title mt-1">Monitoring</h5>
+                <p class="card-text textPadding">
+                  Observe and check the progress or quality over a period of
+                  time.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label class="switch" for="ccc">
+                  <input
+                    type="checkbox"
+                    id="ccc"
+                    [(ngModel)]="
+                      investigator.researches['parameters']['monitoring']
+                    "
+                    (click)="check('monitoring')"
+                  />
+                  <span class="slider round">
+                    <label
+                      *ngIf="
+                        investigator.researches['parameters']['monitoring']
+                      "
+                    ></label>
+                    <label
+                      *ngIf="
+                        !investigator.researches['parameters']['monitoring']
+                      "
+                    ></label>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div class="card">
+              <div class="card-body height">
+                <div class="one-contibuter">
+                  {{
+                    research.commonParameters["submission"] ? "DONE" : "OPEN"
+                  }}
+                </div>
+                <h5 class="titlePadding card-title mt-n2">Submission</h5>
+                <p class="card-text textPadding">
+                  Giving a document, proposal, piece of writing.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="
+                      investigator.researches['parameters']['submission']
+                    "
+                    [disabled]="research.commonParameters['submission']"
+                    (click)="check('submission')"
+                  />
+                  <span class="slider round">
+                    <label
+                      *ngIf="
+                        investigator.researches['parameters']['submission']
+                      "
+                    ></label>
+                    <label
+                      *ngIf="
+                        !investigator.researches['parameters']['submission']
+                      "
+                    ></label>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div
+              class="card"
+              [ngClass]="{
+                'border-danger':
+                  !investigator.researches['parameters']['groupHiring'],
+                'border-success':
+                  investigator.researches['parameters']['groupHiring']
+              }"
+            >
+              <div class="card-body height">
+                <h5 class="titlePadding card-title mt-1">Group Hiring</h5>
+                <p class="card-text textPadding">
+                  Teaming of people tasked with filling a vacant position(s).
+                </p>
+              </div>
+              <div class="card-footer">
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="
+                      investigator.researches['parameters']['groupHiring']
+                    "
+                    (click)="check('groupHiring')"
+                  />
+                  <span class="slider round">
+                    <label
+                      *ngIf="
+                        investigator.researches['parameters']['groupHiring']
+                      "
+                    ></label>
+                    <label
+                      *ngIf="
+                        !investigator.researches['parameters']['groupHiring']
+                      "
+                    ></label>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div class="card border-primary">
+              <div class="card-body height">
+                <div
+                  class="closed"
+                  *ngIf="!research.commonParameters['manuscriptDrafting']"
+                >
+                  CLOSED
+                </div>
+                <h5
+                  class="titlePadding card-title"
+                  [ngClass]="{
+                    'mt-1': research.commonParameters['manuscriptDrafting'],
+                    'mt-n2': !research.commonParameters['manuscriptDrafting']
+                  }"
+                >
+                  Manuscript Drafting
+                </h5>
+                <p class="card-text textPadding">
+                  Preliminary status of the manuscript in which the write up is
+                  yet to be put in shape.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label style="transform: translate(10px, 20px); color: #0e6e94"
+                  >{{
+                    investigator.researches["parameters"]["manuscriptDrafting"]
+                  }}%</label
+                >
+                <input
+                  type="range"
+                  min="0"
+                  [max]="research.commonParameters['manuscriptDrafting']"
+                  [(ngModel)]="
+                    investigator.researches['parameters']['manuscriptDrafting']
+                  "
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div class="card border-primary">
+              <div class="card-body height">
+                <div class="closed" *ngIf="!research.commonParameters['fund']">
+                  CLOSED
+                </div>
+                <h5
+                  class="titlePadding card-title"
+                  [ngClass]="{
+                    'mt-1': research.commonParameters['fund'],
+                    'mt-n2': !research.commonParameters['fund']
+                  }"
+                >
+                  Fund
+                </h5>
+                <p class="card-text textPadding">
+                  Money saved for a particular purpose.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label style="transform: translate(10px, 20px); color: #0e6e94">
+                  {{ investigator.researches["parameters"]["fund"] }}%
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  [max]="research.commonParameters['fund']"
+                  [(ngModel)]="investigator.researches['parameters']['fund']"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-12">
+            <div class="card border-primary">
+              <div class="card-body height">
+                <div
+                  class="closed"
+                  *ngIf="!research.commonParameters['dataCollection']"
+                >
+                  CLOSED
+                </div>
+                <h5
+                  class="titlePadding card-title"
+                  [ngClass]="{
+                    'mt-1': research.commonParameters['dataCollection'],
+                    'mt-n2': !research.commonParameters['dataCollection']
+                  }"
+                >
+                  Data Collection
+                </h5>
+                <p class="card-text textPadding">
+                  Gathering and measuring information on targeted variables in
+                  an established system, which then enables one to answer
+                  relevant questions and evaluate outcomes.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label style="transform: translate(10px, 20px); color: #0e6e94"
+                  >{{
+                    investigator.researches["parameters"]["dataCollection"]
+                  }}%</label
+                >
+                <input
+                  type="range"
+                  min="0"
+                  [max]="research.commonParameters['dataCollection']"
+                  [(ngModel)]="
+                    investigator.researches['parameters']['dataCollection']
+                  "
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div class="card border-primary">
+              <div class="card-body height">
+                <div
+                  [class]="
+                    research.commonParameters['studyPlan'] ? 'must' : 'closed'
+                  "
+                >
+                  {{
+                    research.commonParameters["studyPlan"] ? "MUST" : "CLOSED"
+                  }}
+                </div>
+                <h5 class="titlePadding card-title mt-n2">Study Plan</h5>
+                <p class="card-text textPadding">
+                  Schedules that designate studying times and learning
+                  objectives for specific project.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label style="transform: translate(10px, 20px); color: #0e6e94"
+                  >{{
+                    investigator.researches["parameters"]["studyPlan"]
+                  }}%</label
+                >
+                <input
+                  type="range"
+                  min="0"
+                  [max]="research.commonParameters['studyPlan']"
+                  [(ngModel)]="
+                    investigator.researches['parameters']['studyPlan']
+                  "
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div class="card border-primary">
+              <div class="card-body height">
+                <div
+                  [class]="
+                    research.commonParameters['responsibility']
+                      ? 'must'
+                      : 'closed'
+                  "
+                >
+                  {{
+                    research.commonParameters["responsibility"]
+                      ? "MUST"
+                      : "CLOSED"
+                  }}
+                </div>
+                <h5 class="titlePadding card-title mt-n2">Responsibility</h5>
+                <p class="card-text textPadding">
+                  The state of being accountable
+                </p>
+              </div>
+              <div class="card-footer">
+                <label style="transform: translate(10px, 20px); color: #0e6e94"
+                  >{{
+                    investigator.researches["parameters"]["responsibility"]
+                  }}%</label
+                >
+                <input
+                  type="range"
+                  min="0"
+                  [max]="research.commonParameters['responsibility']"
+                  [(ngModel)]="
+                    investigator.researches['parameters']['responsibility']
+                  "
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-12">
+            <div class="card border-primary">
+              <div class="card-body height">
+                <div
+                  [class]="
+                    research.commonParameters['manuscriptReview']
+                      ? 'must'
+                      : 'closed'
+                  "
+                >
+                  {{
+                    research.commonParameters["manuscriptReview"]
+                      ? "MUST"
+                      : "CLOSED"
+                  }}
+                </div>
+                <h5 class="titlePadding card-title mt-n2">Manuscript review</h5>
+                <p class="card-text textPadding">
+                  Understanding everything written for correction and
+                  suggestions.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label style="transform: translate(10px, 20px); color: #0e6e94"
+                  >{{
+                    investigator.researches["parameters"]["manuscriptReview"]
+                  }}%</label
+                >
+                <input
+                  type="range"
+                  min="0"
+                  [max]="research.commonParameters['manuscriptReview']"
+                  [(ngModel)]="
+                    investigator.researches['parameters']['manuscriptReview']
+                  "
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div class="card border-primary">
+              <div class="card-body height">
+                <div
+                  [class]="
+                    research.commonParameters['revising'] ? 'must' : 'closed'
+                  "
+                >
+                  {{
+                    research.commonParameters["revising"] ? "MUST" : "CLOSED"
+                  }}
+                </div>
+                <h5 class="titlePadding card-title mt-n2">Revising</h5>
+                <p class="card-text textPadding">
+                  Rewriting for corrections or explanation.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label style="transform: translate(10px, 20px); color: #0e6e94"
+                  >{{
+                    investigator.researches["parameters"]["revising"]
+                  }}%</label
+                >
+                <input
+                  type="range"
+                  min="0"
+                  [max]="research.commonParameters['revising']"
+                  [(ngModel)]="
+                    investigator.researches['parameters']['revising']
+                  "
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div class="card border-primary">
+              <div class="card-body height">
+                <div
+                  *ngIf="!research.commonParameters['citation']"
+                  class="closed"
+                >
+                  CLOSED
+                </div>
+                <h5
+                  class="titlePadding card-title"
+                  [ngClass]="{
+                    'mt-1': research.commonParameters['citation'],
+                    'mt-n2': !research.commonParameters['citation']
+                  }"
+                >
+                  Citation
+                </h5>
+                <p class="card-text textPadding">Scholar quotation.</p>
+              </div>
+              <div class="card-footer">
+                <label style="transform: translate(10px, 20px); color: #0e6e94"
+                  >{{
+                    investigator.researches["parameters"]["citation"]
+                  }}%</label
+                >
+                <input
+                  type="range"
+                  min="0"
+                  [max]="research.commonParameters['citation']"
+                  [(ngModel)]="
+                    investigator.researches['parameters']['citation']
+                  "
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div
+              class="card"
+              [ngClass]="{
+                'border-danger': !investigator.researches['parameters']['idea'],
+                'border-success': investigator.researches['parameters']['idea']
+              }"
+            >
+              <div class="card-body height">
+                <h5 class="titlePadding card-title mt-1">Idea</h5>
+                <p class="card-text textPadding">
+                  Thought of solution, plan or invention.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="investigator.researches['parameters']['idea']"
+                    (click)="check('idea')"
+                  />
+                  <span class="slider round">
+                    <label
+                      *ngIf="investigator.researches['parameters']['idea']"
+                    ></label>
+                    <label
+                      *ngIf="!investigator.researches['parameters']['idea']"
+                    ></label>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div class="card">
+              <div class="card-body height">
+                <div class="one-contibuter">
+                  {{ research.commonParameters["irb"] ? "DONE" : "OPEN" }}
+                </div>
+                <h5 class="titlePadding card-title mt-n2">IRB</h5>
+                <p class="card-text textPadding">
+                  Institutional review board (IRB): Committee for independent
+                  ethical approval in the same place.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="investigator.researches['parameters']['irb']"
+                    [disabled]="research.commonParameters['irb']"
+                    (click)="check('irb')"
+                  />
+                  <span class="slider round">
+                    <label
+                      *ngIf="investigator.researches['parameters']['irb']"
+                    ></label>
+                    <label
+                      *ngIf="!investigator.researches['parameters']['irb']"
+                    ></label>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div
+              class="card"
+              [ngClass]="{
+                'border-danger':
+                  !investigator.researches['parameters']['dataAnalysis'],
+                'border-success':
+                  investigator.researches['parameters']['dataAnalysis']
+              }"
+            >
+              <div class="card-body height">
+                <h5 class="titlePadding card-title mt-1">Data Analysis</h5>
+                <p class="card-text textPadding">
+                  A process of inspecting, cleansing, transforming, and modeling
+                  information.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="
+                      investigator.researches['parameters']['dataAnalysis']
+                    "
+                    (click)="check('dataAnalysis')"
+                  />
+                  <span class="slider round">
+                    <label
+                      *ngIf="
+                        investigator.researches['parameters']['dataAnalysis']
+                      "
+                    ></label>
+                    <label
+                      *ngIf="
+                        !investigator.researches['parameters']['dataAnalysis']
+                      "
+                    ></label>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div
+              class="card"
+              [ngClass]="{
+                'border-danger':
+                  !investigator.researches['parameters']['inquiry'],
+                'border-success':
+                  investigator.researches['parameters']['inquiry']
+              }"
+            >
+              <div class="card-body height">
+                <h5 class="titlePadding card-title mt-1">Inquiry</h5>
+                <p class="card-text textPadding">
+                  Asking for information for augmenting knowledge, resolving
+                  doubt, or solving a problem.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="
+                      investigator.researches['parameters']['inquiry']
+                    "
+                    (click)="check('inquiry')"
+                  />
+                  <span class="slider round">
+                    <label
+                      *ngIf="investigator.researches['parameters']['inquiry']"
+                    ></label>
+                    <label
+                      *ngIf="!investigator.researches['parameters']['inquiry']"
+                    ></label>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12">
+            <div
+              class="card"
+              [ngClass]="{
+                'border-danger':
+                  !investigator.researches['parameters']['presentation'],
+                'border-success':
+                  investigator.researches['parameters']['presentation']
+              }"
+            >
+              <div class="card-body height">
+                <h5 class="titlePadding card-title mt-1">Presentation</h5>
+                <p class="card-text textPadding">
+                  Showing an outcome in conferences.
+                </p>
+              </div>
+              <div class="card-footer">
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="
+                      investigator.researches['parameters']['presentation']
+                    "
+                    (click)="check('presentation')"
+                  />
+                  <span class="slider round">
+                    <label
+                      *ngIf="
+                        investigator.researches['parameters']['presentation']
+                      "
+                    ></label>
+                    <label
+                      *ngIf="
+                        !investigator.researches['parameters']['presentation']
+                      "
+                    ></label>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="text-align: right; margin-right: 65px">
+            <button
+              type="button"
+              class="btn btn-primary m-1"
+              (click)="submit()"
+            >
+              Validate
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>

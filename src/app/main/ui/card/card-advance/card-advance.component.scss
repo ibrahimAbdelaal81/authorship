@@ -1,0 +1,18 @@
+@import "@core/scss/base/plugins/charts/chart-apex.scss";
+@import "@core/scss/base/pages/app-chat-list.scss";
+.addBtn {
+  float: right;
+  margin-top: -40px;
+}
+.showResearchDetails {
+  cursor: pointer;
+}
+.marginBottom {
+  margin-bottom: -30px;
+}
+@media screen and (max-width: 700px) {
+  .marginBottom {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+}

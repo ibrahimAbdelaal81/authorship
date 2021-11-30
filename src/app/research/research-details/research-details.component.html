@@ -1,0 +1,116 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <!-- content-header component -->
+    <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+    <!-- account setting page -->
+    <section id="page-account-settings">
+      <div class="row nav-vertical d-flex">
+        <div class="col-md-3 mb-2 mb-md-0">
+          <ul
+            ngbNav
+            #navVertical="ngbNav"
+            class="nav nav-pills flex-column nav-left"
+          >
+            <li class="nav-item" ngbNavItem>
+              <a
+                ngbNavLink
+                class="nav-link d-flex py-75"
+                id="account-pill-general"
+                data-toggle="pill"
+                href="#account-vertical-general"
+                aria-expanded="true"
+              >
+                <i data-feather="home" class="font-medium-3 mr-1"></i>
+                <span class="font-weight-bold">General</span>
+              </a>
+              <ng-template ngbNavContent>
+                <app-research-general
+                  [data]="researchDetails"
+                ></app-research-general>
+              </ng-template>
+            </li>
+            <li
+              class="nav-item"
+              ngbNavItem
+              *ngIf="
+                userRole !== 'Admin' && this.investigator?.status === 'Approved'
+              "
+            >
+              <a
+                ngbNavLink
+                class="nav-link d-flex py-75"
+                id="account-pill-password"
+                data-toggle="pill"
+                href="#account-vertical-password"
+                aria-expanded="false"
+              >
+                <i data-feather="sliders" class="font-medium-3 mr-1"></i>
+                <span class="font-weight-bold">Parameters</span>
+              </a>
+              <ng-template ngbNavContent>
+                <div class="card">
+                  <div class="card-body">
+                    <app-research-parameters
+                      [data]="researchDetails"
+                    ></app-research-parameters>
+                  </div>
+                </div>
+              </ng-template>
+            </li>
+            <li
+              class="nav-item"
+              ngbNavItem
+              *ngIf="userRole === 'Admin' || investigatorRole === 'Admin'"
+            >
+              <a
+                ngbNavLink
+                class="nav-link d-flex py-75"
+                id="account-pill-info"
+                data-toggle="pill"
+                href="#account-vertical-info"
+                aria-expanded="false"
+              >
+                <i data-feather="search" class="font-medium-3 mr-1"></i>
+                <span class="font-weight-bold">Investigators</span>
+              </a>
+
+              <ng-template ngbNavContent>
+                <app-research-investigators
+                  [data]="researchDetails"
+                ></app-research-investigators>
+              </ng-template>
+            </li>
+            <li
+              class="nav-item"
+              ngbNavItem
+              *ngIf="
+                userRole === 'Admin' ||
+                (investigatorRole === 'Admin' &&
+                  investigator?.status === 'Approved') ||
+                investigator?.canShowResult === 'Approved'
+              "
+            >
+              <a
+                ngbNavLink
+                class="nav-link d-flex py-75"
+                id="account-pill-social"
+                data-toggle="pill"
+                href="#account-vertical-social"
+                aria-expanded="false"
+              >
+                <i data-feather="trending-up" class="font-medium-3 mr-1"></i>
+                <span class="font-weight-bold">Rank</span>
+              </a>
+              <ng-template ngbNavContent>
+                <app-research-rank [data]="researchDetails"></app-research-rank>
+              </ng-template>
+            </li>
+          </ul>
+        </div>
+        <div [ngbNavOutlet]="navVertical" class="col-12 col-md-9"></div>
+      </div>
+    </section>
+    <!--/ account setting page -->
+  </div>
+</div>

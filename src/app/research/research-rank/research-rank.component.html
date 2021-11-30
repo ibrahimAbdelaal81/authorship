@@ -1,0 +1,100 @@
+<ng-container *ngIf="loading; else notLoading">
+  <div class="spinner-grow text-primary mr-50 centerLoading">
+    <span class="sr-only">Loading...</span>
+  </div>
+</ng-container>
+<ng-template #notLoading>
+  <div class="card">
+    <div class="row" id="table-striped">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Rank</h4>
+          </div>
+          <ngx-datatable
+            class="bootstrap core-bootstrap"
+            [headerHeight]="40"
+            [rowHeight]="58"
+            [limit]="10"
+            [columnMode]="ColumnMode.force"
+            [footerHeight]="50"
+            [rows]="allRanks"
+            [scrollbarH]="true"
+          >
+            <ngx-datatable-column name="#" prop="rowNumber" [width]="50">
+              <ng-template let-rowNumber="value" ngx-datatable-cell-template>
+                <div>
+                  {{ rowNumber }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="User" prop="firstName">
+              <ng-template
+                let-row="row"
+                let-name="value"
+                ngx-datatable-cell-template
+              >
+                {{ row.firstName + " " + row.lastName }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column
+              name="Updated At"
+              prop="researches.updated_at"
+            >
+              <ng-template let-updated_at="value" ngx-datatable-cell-template>
+                <div>
+                  <i class="feather font-medium-3"></i>
+                  {{ updated_at | date: "short" }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column
+              name="Percentage"
+              prop="researches.percentage"
+            >
+              <ng-template
+                let-percentageVal="value"
+                ngx-datatable-cell-template
+              >
+                <div>
+                  <label style="transform: translate(70px, 12px)"
+                    >{{ percentageVal }}%</label
+                  >
+                  <input
+                    type="range"
+                    class="marginLeft"
+                    min="0"
+                    max="100"
+                    disabled="true"
+                    [ngModel]="percentageVal"
+                  />
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Rank" prop="researches.rankStatus">
+              <ng-template let-rankStatus="value" ngx-datatable-cell-template>
+                <div
+                  class="badge badge-pill"
+                  [ngClass]="{
+                    'badge-light-success': rankStatus == 'Accepted',
+                    'badge-light-danger': rankStatus == 'Rejected'
+                  }"
+                >
+                  {{ rankStatus }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Score" prop="researches.score">
+              <ng-template let-score="value" ngx-datatable-cell-template>
+                <div>
+                  <i class="feather font-medium-3"></i>
+                  {{ score }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

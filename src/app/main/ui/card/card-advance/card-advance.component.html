@@ -1,0 +1,232 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <!-- <app-content-header [contentHeader]="contentHeader"></app-content-header> -->
+    <h3 class="marginBottom">Researches</h3>
+    <div
+      class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0"
+    >
+      <label class="d-flex align-items-center ml-1 ml-md-0"
+        ><input
+          [(ngModel)]="searchValue"
+          name="searchValue"
+          type="search"
+          placeholder="Research Name"
+          class="form-control ml-25"
+          (keyup)="filterUpdate($event)"
+      /></label>
+      <button
+        *ngIf="userRole === 'Admin'"
+        class="btn btn-primary ml-1"
+        rippleEffect
+        (click)="toggleSidebar('new-research-sidebar')"
+      >
+        <i data-feather="plus" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i
+        ><span class="d-none d-sm-inline-block">Add New Research</span>
+      </button>
+    </div>
+
+    <ngb-alert [type]="'danger'" [dismissible]="false" *ngIf="error">
+      <div class="alert-body">
+        <p>{{ error }}</p>
+      </div>
+    </ngb-alert>
+    <ng-container *ngIf="loading; else notLoading">
+      <div class="spinner-grow text-primary mr-50 centerLoading">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </ng-container>
+    <ng-template #notLoading>
+      <div class="row match-height">
+        <div
+          *ngFor="let item of allResearches"
+          class="col-lg-4 col-md-6 col-12"
+        >
+          <div
+            class="card card-developer-meetup showResearchDetails"
+            (click)="showResearchDetails(item)"
+          >
+            <div class="bg-light-primary rounded-top text-center">
+              <img
+                src="{{
+                  item.image
+                    ? item.image
+                    : 'assets/images/illustration/email.svg'
+                }}"
+                alt="Meeting Pic"
+                height="170"
+              />
+            </div>
+            <div class="card-body">
+              <div class="meetup-header d-flex align-items-center">
+                <div class="meetup-day">
+                  <h3 class="mb-0">{{ item.created_at | date }}</h3>
+                </div>
+                <div class="my-auto">
+                  <h4 class="card-title mb-25">{{ item.name }}</h4>
+                  <p class="card-text mb-0">{{ item.status }}</p>
+                </div>
+              </div>
+              <div class="media">
+                <div class="media-body">
+                  <h6 class="mb-0">
+                    {{ item.abstract ? item.abstract : "No Abstract Found" }}
+                  </h6>
+                </div>
+              </div>
+
+              <div class="avatar-group">
+                <ng-container
+                  *ngIf="
+                    item.investigators && item.investigators.length > 0;
+                    else elseTemplate
+                  "
+                >
+                  <app-investigator-thumbnail-summary *ngFor="let invest of item.investigators" [data]="invest"></app-investigator-thumbnail-summary>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  No Investigators Found
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+  <core-sidebar
+    class="modal modal-slide-in sidebar-todo-modal fade"
+    name="new-research-sidebar"
+    overlayClass="modal-backdrop"
+  >
+    <div class="slideout-content">
+      <!-- Modal to add new research starts-->
+      <div
+        class="modalsd modal-slide-in sdfade new-research-modal"
+        id="modals-slide-in"
+      >
+        <div class="modal-dialog">
+          <form
+            class="add-new-research modal-content pt-0"
+            (ngSubmit)="(newUserForm.form.valid)"
+            #newUserForm="ngForm"
+          >
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              (click)="toggleSidebar('new-research-sidebar')"
+            >
+              ×
+            </button>
+            <div class="modal-header mb-1">
+              <h5 class="modal-title" id="exampleModalLabel">New research</h5>
+            </div>
+            <ngb-alert [type]="'danger'" [dismissible]="false" *ngIf="error">
+              <div class="alert-body">
+                <p>{{ error }}</p>
+              </div>
+            </ngb-alert>
+            <form
+              class="auth-register-form m-2"
+              [formGroup]="registerForm"
+              (ngSubmit)="onSubmit()"
+            >
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group">
+                    <label for="basicInputFile">Image</label>
+                    <div class="custom-file">
+                      <input
+                        type="file"
+                        class="custom-file-input"
+                        id="customFile"
+                        (change)="onChooseImage($event)"
+                      />
+                      <label class="custom-file-label" for="customFile"
+                        >Choose file</label
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12" *ngIf="imagePreview">
+                  <div class="img-wrap">
+                    <img
+                      style="margin-top: 20px"
+                      [src]="imagePreview"
+                      width="100"
+                      height="100"
+                    />
+                    <br /><br />
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-group">
+                    <label for="name" class="form-label">Name</label>
+                    <input
+                      type="text"
+                      formControlName="name"
+                      class="form-control"
+                      placeholder="Research Name"
+                      aria-describedby="name"
+                      tabindex="1"
+                      autofocus
+                      [ngClass]="{
+                        'is-invalid': submitted && f.name.errors
+                      }"
+                    />
+                    <div
+                      *ngIf="submitted && f.name.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f.name.errors.required">Name is required</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-group">
+                    <label for="abstract" class="form-label">Abstract</label>
+                    <textarea
+                      class="form-control"
+                      formControlName="abstract"
+                      id="abstract"
+                      rows="3"
+                      placeholder="Research Abstract"
+                      aria-describedby="abstract"
+                      tabindex="1"
+                      autofocus
+                      [ngClass]="{
+                        'is-invalid': submitted && f.abstract.errors
+                      }"
+                    ></textarea>
+                    <div
+                      *ngIf="submitted && f.abstract.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f.abstract.errors.required">
+                        Abstract is required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                [disabled]="loading"
+                class="btn btn-primary btn-block"
+                tabindex="5"
+                rippleEffect
+              >
+                <span
+                  *ngIf="loading"
+                  class="spinner-border spinner-border-sm mr-1"
+                ></span>
+                Add
+              </button>
+            </form>
+          </form>
+        </div>
+      </div>
+      <!-- Modal to add new research Ends-->
+    </div>
+  </core-sidebar>
+</div>

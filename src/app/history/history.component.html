@@ -1,0 +1,75 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <!-- content-header component -->
+    <!-- <app-content-header [contentHeader]="contentHeader"></app-content-header> -->
+    <!-- Timeline Starts -->
+    <section class="basic-timeline">
+      <div class="row">
+        <div class="col-md-6">
+          <!-- <core-card-snippet [snippetCode]="_snippetCodeBasic"> -->
+          <h4 class="card-title">History</h4>
+          <ngb-alert [type]="'danger'" [dismissible]="false" *ngIf="error">
+            <div class="alert-body">
+              <p>{{ error }}</p>
+            </div>
+          </ngb-alert>
+          <ng-container *ngIf="loading; else notLoading">
+            <div class="spinner-grow text-primary mr-50 centerLoading">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </ng-container>
+          <ng-template #notLoading>
+            <div class="card-body">
+              <ul class="timeline">
+                <li
+                  class="timeline-item"
+                  *ngFor="let historyItem of allHistoryItems"
+                >
+                  <span
+                    class="
+                      timeline-point
+                      timeline-point-secondary
+                      timeline-point-indicator
+                    "
+                  ></span>
+                  <div class="timeline-event">
+                    <div
+                      class="
+                        d-flex
+                        justify-content-between
+                        flex-sm-row flex-column
+                        mb-sm-0 mb-1
+                      "
+                    >
+                      <h6>Research: {{ historyItem.testName }}</h6>
+                      <span class="timeline-event-time">{{
+                        historyItem.created_at | date: "MMM d yyyy, h:mm a"
+                      }}</span>
+                    </div>
+                    <p>{{ historyItem.record }}</p>
+                    <div class="media align-items-center">
+                      <div class="avatar">
+                        <img
+                          src="assets/images/portrait/small/default.jpg"
+                          alt="avatar"
+                          height="38"
+                          width="38"
+                        />
+                      </div>
+                      <div class="media-body ml-50">
+                        <h6 class="mb-0">{{ historyItem.userName }}</h6>
+                        <!-- <span>System User</span> -->
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </ng-template>
+          <!-- </core-card-snippet> -->
+        </div>
+      </div>
+    </section>
+    <!-- Timeline Ends -->
+  </div>
+</div>
