@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { ToastrService } from "ngx-toastr";
 @Injectable({
   providedIn: "root",
 })
@@ -9,7 +11,10 @@ export class UsersService {
   apiUrl = environment.apiUrl;
   link = "users";
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _toastrService: ToastrService
+  ) {}
 
   getAllUsers(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${this.link}`);
@@ -78,5 +83,33 @@ export class UsersService {
     return this.http.put(`${this.apiUrl}/${this.link}/${userId}/research`, {
       researchId: researchId,
     });
+  }
+
+  updatePassword(id, PasswordCredentials) {
+    return this.http
+      .patch(`${this.apiUrl}/${this.link}/${id}/password`, PasswordCredentials)
+      .pipe(
+        map(
+          (user: any) => {
+            setTimeout(() => {
+              this._toastrService.success(
+                "You have successfully changed your password",
+                "👋 Welcome, " + user.user.firstName + "!",
+                { toastClass: "toast ngx-toastr", closeButton: true }
+              );
+            }, 2500);
+            return user;
+          },
+          (err) => {
+            setTimeout(() => {
+              this._toastrService.error(err, "", {
+                toastClass: "toast ngx-toastr",
+                closeButton: true,
+              });
+            }, 2500);
+            return err;
+          }
+        )
+      );
   }
 }

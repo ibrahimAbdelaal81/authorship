@@ -143,10 +143,23 @@ export class AuthenticationService {
    * @param resetPasswordCredentials
    */
   resetPassword(resetPasswordCredentials: any) {
-    return this._http.post(
-      `${environment.apiUrl}/auth/local/reset-password`,
-      resetPasswordCredentials
-    );
+    return this._http
+      .post(
+        `${environment.apiUrl}/auth/local/reset-password`,
+        resetPasswordCredentials
+      )
+      .pipe(
+        map((res) => {
+          setTimeout(() => {
+            this._toastrService.success(
+              "An email has been sent to reset your password",
+              "Check you email",
+              { toastClass: "toast ngx-toastr", closeButton: true }
+            );
+          }, 2500);
+          return res;
+        })
+      );
   }
 
   /**

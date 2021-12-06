@@ -5,8 +5,10 @@ import { switchMap, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
 
 import { CoreConfigService } from "@core/services/config.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { AuthenticationService } from "app/auth/service";
+import { UsersService } from "app/services/users.service";
+import { User } from "app/auth/models";
 
 @Component({
   selector: "app-auth-reset-password-v2",
@@ -24,6 +26,7 @@ export class AuthResetPasswordV2Component implements OnInit {
   public verified: boolean;
   public verifying: boolean;
   public loading: boolean;
+  public user: any;
 
   // Private
   private _unsubscribeAll: Subject<any>;
@@ -38,7 +41,9 @@ export class AuthResetPasswordV2Component implements OnInit {
     private _coreConfigService: CoreConfigService,
     private _formBuilder: FormBuilder,
     private _authenticationService: AuthenticationService,
-    private _route: ActivatedRoute
+    private _userService: UsersService,
+    private _route: ActivatedRoute,
+    private _router: Router
   ) {
     this._unsubscribeAll = new Subject();
     this.verified = false;
@@ -89,9 +94,18 @@ export class AuthResetPasswordV2Component implements OnInit {
     this.submitted = true;
 
     // stop here if form is invalid
-    if (this.resetPasswordForm.invalid) {
+    if (
+      this.resetPasswordForm.invalid ||
+      this.f.newPassword.value !== this.f.confirmPassword.value
+    ) {
       return;
     }
+    const PasswordCredentials = this.resetPasswordForm.value;
+    this._userService
+      .updatePassword(this.user._id, PasswordCredentials)
+      .subscribe(() => {
+        this._router.navigate(["/"]);
+      });
   }
 
   // Lifecycle Hooks
@@ -110,14 +124,14 @@ export class AuthResetPasswordV2Component implements OnInit {
       .pipe(
         switchMap((params: any) =>
           this._authenticationService.verifyResetPassword({
-            _id: params.id,
+            id: params.id,
             token: params.token,
           })
         )
       )
       .subscribe(
         (res) => {
-          console.log(res);
+          this.user = res.user;
           this.loading = false;
           this.verifying = false;
           this.verified = true;
