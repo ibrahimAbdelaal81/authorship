@@ -136,4 +136,53 @@ export class AuthenticationService {
     // notify
     this.currentUserSubject.next(null);
   }
+
+  /**
+   * Reset password
+   *
+   * @param resetPasswordCredentials
+   */
+  resetPassword(resetPasswordCredentials: any) {
+    return this._http.post(
+      `${environment.apiUrl}/auth/local/reset-password`,
+      resetPasswordCredentials
+    );
+  }
+
+  /**
+   * Reset password
+   *
+   * @param resetPasswordCredentials
+   */
+  verifyResetPassword(resetPasswordCredentials: any) {
+    return this._http
+      .post(
+        `${environment.apiUrl}/auth/local/verify-reset-password`,
+        resetPasswordCredentials
+      )
+      .pipe(
+        map((user: any) => {
+          if (user && user.token) {
+            const role = user.user.roles[0] == "admin" ? "Admin" : "User";
+            const obj: any = {
+              token: user.token,
+              avatar: "avatar-s-11.jpg",
+              email: user.user.email,
+              appStatus: user.user.appStatus,
+              firstName: user.user.firstName,
+              id: user.user._id,
+              lastName: user.user.lastName,
+              role,
+              image: user.user.image,
+            };
+            localStorage.setItem("currentUser", JSON.stringify(obj));
+
+            // notify
+            this.currentUserSubject.next(obj);
+          }
+
+          return user;
+        })
+      );
+  }
 }

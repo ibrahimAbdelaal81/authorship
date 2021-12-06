@@ -87,7 +87,6 @@ export class AuthLoginV2Component implements OnInit {
     this.loading = true;
     this._authenticationService
       .login(this.f.email.value, this.f.password.value)
-      .pipe(first())
       .subscribe(
         (data) => {
           if (data.status === "401" || data.status === "403") {
@@ -98,6 +97,8 @@ export class AuthLoginV2Component implements OnInit {
           }
         },
         (error) => {
+          console.log(error);
+
           this.error = error;
           this.loading = false;
         }
@@ -112,8 +113,8 @@ export class AuthLoginV2Component implements OnInit {
    */
   ngOnInit(): void {
     this.loginForm = this._formBuilder.group({
-      email: ["admin@demo.com", [Validators.required, Validators.email]],
-      password: ["admin", Validators.required],
+      email: ["", [Validators.required, Validators.email]],
+      password: ["", Validators.required],
     });
 
     // get return url from route parameters or default to '/'

@@ -1,5 +1,5 @@
 {
-  "name": "Authorship",
+  "name": "realauthor",
   "version": "7.0.0",
   "scripts": {
     "ng": "ng",
@@ -9,7 +9,7 @@
     "build": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build",
     "build-stats": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --stats-json",
     "build:prod": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --configuration production",
-    "postbuild:prod" : "cpx dockerfile ./dist/vuexy & cpx nginx.conf ./dist/vuexy",
+    "postbuild:prod": "cpx dockerfile ./dist/vuexy & cpx nginx.conf ./dist/vuexy",
     "build:prod-stats": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --configuration production --stats-json",
     "bundle-analyzer": "webpack-bundle-analyzer dist/vuexy/stats.json",
     "test": "ng test",

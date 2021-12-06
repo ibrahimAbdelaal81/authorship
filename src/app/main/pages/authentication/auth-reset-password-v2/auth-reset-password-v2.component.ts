@@ -1,16 +1,18 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { switchMap, takeUntil } from "rxjs/operators";
+import { Subject } from "rxjs";
 
-import { CoreConfigService } from '@core/services/config.service';
+import { CoreConfigService } from "@core/services/config.service";
+import { ActivatedRoute } from "@angular/router";
+import { AuthenticationService } from "app/auth/service";
 
 @Component({
-  selector: 'app-auth-reset-password-v2',
-  templateUrl: './auth-reset-password-v2.component.html',
-  styleUrls: ['./auth-reset-password-v2.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  selector: "app-auth-reset-password-v2",
+  templateUrl: "./auth-reset-password-v2.component.html",
+  styleUrls: ["./auth-reset-password-v2.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AuthResetPasswordV2Component implements OnInit {
   // Public
@@ -19,6 +21,9 @@ export class AuthResetPasswordV2Component implements OnInit {
   public confPasswordTextType: boolean;
   public resetPasswordForm: FormGroup;
   public submitted = false;
+  public verified: boolean;
+  public verifying: boolean;
+  public loading: boolean;
 
   // Private
   private _unsubscribeAll: Subject<any>;
@@ -29,24 +34,32 @@ export class AuthResetPasswordV2Component implements OnInit {
    * @param {CoreConfigService} _coreConfigService
    * @param {FormBuilder} _formBuilder
    */
-  constructor(private _coreConfigService: CoreConfigService, private _formBuilder: FormBuilder) {
+  constructor(
+    private _coreConfigService: CoreConfigService,
+    private _formBuilder: FormBuilder,
+    private _authenticationService: AuthenticationService,
+    private _route: ActivatedRoute
+  ) {
     this._unsubscribeAll = new Subject();
+    this.verified = false;
+    this.loading = false;
+    this.verifying = true;
 
     // Configure the layout
     this._coreConfigService.config = {
       layout: {
         navbar: {
-          hidden: true
+          hidden: true,
         },
         menu: {
-          hidden: true
+          hidden: true,
         },
         footer: {
-          hidden: true
+          hidden: true,
         },
         customizer: false,
-        enableLocalStorage: false
-      }
+        enableLocalStorage: false,
+      },
     };
   }
 
@@ -89,14 +102,40 @@ export class AuthResetPasswordV2Component implements OnInit {
    */
   ngOnInit(): void {
     this.resetPasswordForm = this._formBuilder.group({
-      newPassword: ['', [Validators.required]],
-      confirmPassword: ['', [Validators.required]]
+      newPassword: ["", [Validators.required]],
+      confirmPassword: ["", [Validators.required]],
     });
+    this.loading = true;
+    this._route.queryParams
+      .pipe(
+        switchMap((params: any) =>
+          this._authenticationService.verifyResetPassword({
+            _id: params.id,
+            token: params.token,
+          })
+        )
+      )
+      .subscribe(
+        (res) => {
+          console.log(res);
+          this.loading = false;
+          this.verifying = false;
+          this.verified = true;
+        },
+        (err) => {
+          console.log(err);
+          this.verified = false;
+          this.loading = false;
+          this.verifying = false;
+        }
+      );
 
     // Subscribe to config changes
-    this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
-      this.coreConfig = config;
-    });
+    this._coreConfigService.config
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config) => {
+        this.coreConfig = config;
+      });
   }
 
   /**

@@ -5,9 +5,9 @@
 export const environment = {
   production: false,
   hmr: false,
-  apiUrl: "https://backend.realauthor.com",
+  // apiUrl: "https://backend.realauthor.com",
   // apiUrl: "http://localhost:4000",
-  // apiUrl: "http://localhost:8081",
+  apiUrl: "http://localhost:8081",
 };
 
 /*
