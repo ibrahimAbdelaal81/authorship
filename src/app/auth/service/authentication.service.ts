@@ -198,4 +198,16 @@ export class AuthenticationService {
         })
       );
   }
+
+  /**
+   * Reset password
+   *
+   * @param verifyEmailCredentials
+   */
+  verifyEmail(verifyEmailCredentials: any) {
+    return this._http.post(
+      `${environment.apiUrl}/auth/local/verify`,
+      verifyEmailCredentials
+    );
+  }
 }

@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { switchMap, takeUntil } from "rxjs/operators";
+import { Subject } from "rxjs";
 
-import { CoreConfigService } from '@core/services/config.service';
+import { CoreConfigService } from "@core/services/config.service";
+import { AuthenticationService } from "app/auth/service";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
-  selector: 'app-maintenance',
-  templateUrl: './maintenance.component.html',
-  styleUrls: ['./maintenance.component.scss']
+  selector: "app-maintenance",
+  templateUrl: "./maintenance.component.html",
+  styleUrls: ["./maintenance.component.scss"],
 })
 export class MaintenanceComponent implements OnInit {
   public coreConfig: any;
@@ -21,24 +23,29 @@ export class MaintenanceComponent implements OnInit {
    *
    * @param {CoreConfigService} _coreConfigService
    */
-  constructor(private _coreConfigService: CoreConfigService) {
+  constructor(
+    private _coreConfigService: CoreConfigService,
+    private _authenticationService: AuthenticationService,
+    private _route: ActivatedRoute,
+    private _router: Router
+  ) {
     this._unsubscribeAll = new Subject();
 
     // Configure the layout
     this._coreConfigService.config = {
       layout: {
         navbar: {
-          hidden: true
+          hidden: true,
         },
         footer: {
-          hidden: true
+          hidden: true,
         },
         menu: {
-          hidden: true
+          hidden: true,
         },
         customizer: false,
-        enableLocalStorage: false
-      }
+        enableLocalStorage: false,
+      },
     };
   }
 
@@ -50,9 +57,24 @@ export class MaintenanceComponent implements OnInit {
    */
   ngOnInit(): void {
     // Subscribe to config changes
-    this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
-      this.coreConfig = config;
-    });
+    this._coreConfigService.config
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config) => {
+        this.coreConfig = config;
+      });
+
+    this._route.paramMap
+      .pipe(
+        switchMap((params) =>
+          this._authenticationService.verifyEmail({
+            token: params.get("token"),
+          })
+        )
+      )
+      .subscribe((res) => {
+        console.log(res);
+        // this._router.navigate(["/"]);
+      });
   }
 
   /**
