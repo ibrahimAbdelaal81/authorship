@@ -153,10 +153,10 @@ export class AuthenticationService {
           setTimeout(() => {
             this._toastrService.success(
               "An email has been sent to reset your password",
-              "Check you email",
+              "Check your email",
               { toastClass: "toast ngx-toastr", closeButton: true }
             );
-          }, 2500);
+          }, 500);
           return res;
         })
       );

@@ -7,7 +7,6 @@ import { Subject } from "rxjs";
 import { CoreConfigService } from "@core/services/config.service";
 import { AuthenticationService } from "app/auth/service";
 import { AnyPtrRecord } from "dns";
-import { NotificationService } from "app/services/notification.service";
 
 @Component({
   selector: "app-auth-forgot-password-v2",
@@ -36,8 +35,7 @@ export class AuthForgotPasswordV2Component implements OnInit {
   constructor(
     private _coreConfigService: CoreConfigService,
     private _formBuilder: FormBuilder,
-    private _authenticationService: AuthenticationService,
-    private _notificationService: NotificationService
+    private _authenticationService: AuthenticationService
   ) {
     this._unsubscribeAll = new Subject();
 
@@ -80,10 +78,6 @@ export class AuthForgotPasswordV2Component implements OnInit {
       .pipe(first())
       .subscribe(
         (body) => {
-          this._notificationService.success(
-            "An email has been sent to your email",
-            "Reset password"
-          );
           console.log(body);
         },
         (err) => {
